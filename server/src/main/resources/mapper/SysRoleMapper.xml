@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ss.server.dao.SysRoleMapper">
-
-    <resultMap id="roleMap" type="SysRole">
+    <!--type也可以只写类的名字(首字母大小写都可以) ，但是使用的mybatis-plus之后不写全限定名会显示红色，很烦，所以写全名了-->
+    <resultMap id="roleMap" type="com.ss.server.entity.SysRole" >
         <id property="roleId" column="role_id"/>
-        <result property="roleCreated" column="role_created" jdbcType="TIMESTAMP" />
-        <result property="roleUpdated" column="role_updated" jdbcType="TIMESTAMP" />
+        <result property="roleCreated" column="role_created" jdbcType="TIMESTAMP"/>
+        <result property="roleUpdated" column="role_updated" jdbcType="TIMESTAMP"/>
     </resultMap>
+    <select id="getRolesByUserId" resultType="com.ss.server.entity.SysRole">
+        SELECT r.role_name,r.role_val FROM sys_role r, sys_user_role ur
+        WHERE r.role_id = ur.role_id AND ur.user_id = #{userId}
+    </select>
+
+    <select id="getRoleIdsByUserId" resultType="java.lang.String">
+        SELECT r.role_id FROM sys_role r, sys_user_role ur
+        WHERE r.role_id = ur.role_id AND ur.user_id = #{userId}
+    </select>
+
+    <select id="isRoleIdsContainRoleVal" resultType="java.lang.Boolean">
+        SELECT
+        CONCAT(',',GROUP_CONCAT(role_val SEPARATOR ','),',')
+        REGEXP CONCAT(',',#{roleVal},',{1}') AS result FROM sys_role
+        WHERE role_id IN
+        <foreach collection="roleIds" item="roleId" separator="," open="(" close=")">
+            #{roleId}
+        </foreach>
+    </select>
+    <select id="isUserContainRoleVal" resultType="java.lang.Boolean">
+        SELECT CONCAT(',',GROUP_CONCAT(r.role_val SEPARATOR ','),',')
+        REGEXP CONCAT(',',#{roleVal},',{1}') AS result FROM sys_role r, sys_user_role ur
+        WHERE ur.role_id = r.role_id AND ur.user_id = #{userId}
+    </select>
 
 </mapper>

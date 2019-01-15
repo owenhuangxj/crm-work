@@ -15,7 +15,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SysRole extends Model<SysRole> implements Serializable{
+public class SysRole extends Model<SysRole> {
 
     @TableId(type = IdType.ID_WORKER_STR)
     private String roleId;      // 角色id
@@ -24,6 +24,7 @@ public class SysRole extends Model<SysRole> implements Serializable{
     private String roleVal;     // 角色值，用于权限判断
     private Date roleCreated;   // 创建时间
     private Date roleUpdated;   // 修改时间
+
     @Override
     protected Serializable pkVal() {
         return roleId;

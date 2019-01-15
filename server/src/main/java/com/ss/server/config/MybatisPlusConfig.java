@@ -12,7 +12,7 @@ public class MybatisPlusConfig {
      * 注册分页插件==>mybatis分页必须配置，自动识别数据库类型
      */
     @Bean
-    public PaginationInterceptor paginationInterceptor(){
+    public PaginationInterceptor paginationInterceptor() {
         return new PaginationInterceptor();
     }
 }

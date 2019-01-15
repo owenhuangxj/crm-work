@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateRolePermModel implements Serializable{
+public class UpdateRolePermModel implements Serializable {
     private String roleId;
     private Integer permType;
     private List<String> permVals = new ArrayList<>();

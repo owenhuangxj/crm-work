@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ss.server.dao.SysPermMapper">
+    <!--autoMapping是自动映射属性和字段的开关，true表示自动映射(前提是符合下划线和驼峰命名规则的约定)-->
+    <resultMap id="userMap" type="com.ss.server.entity.SysPerm" autoMapping="true">
+        <result property="permCreated" column="user_created" jdbcType="TIMESTAMP"/>
+        <result property="permUpdated" column="user_updated" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <!--
+        user->role多对多，role->perm多对多所以有两个中间表
+        通过userId去user-role中间表查出userId所对应的roleIds
+        通过roleIds 去role-perm中间表查出所有roleId对应的perms
+    -->
+    <select id="getPermsByUserId" resultType="com.ss.server.entity.SysPerm">
+        SELECT p.perm_name,p.perm_val FROM sys_perm p, sys_role_perm rp, sys_user_role ur
+        WHERE p.perm_val = rp.perm_val
+        AND ur.role_id = rp.role_id
+        AND ur.user_id = #{userId}
+    </select>
+    <select id="getPermsByRoleId" resultType="com.ss.server.entity.SysPerm">
+        SELECT p.perm_val,p.perm_type,p.is_leaf FROM sys_perm p, sys_role_perm rp
+        WHERE p.perm_val = rp.perm_val AND rp.role_id = #{roleId}
+    </select>
+    <insert id="saveOrUpdate">
+        INSERT INTO sys_perm (prem_val,perm_parent,perm_name,perm_type,is_leaf,perm_created) VALUES
+        <foreach collection="perms" item="p" separator=",">
+            (#{p.permVal},#{p.permParent},#{p.permName},#{p.permType},#{p.isLeaf},#{p.permCreated})
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+        perm_name = VALUES(permName), perm_parent = VALUES(permParent), perm_type = VALUES(permType), is_leaf = VALUES(isLeaf), permUpdated = now()
+    </insert>
+</mapper>

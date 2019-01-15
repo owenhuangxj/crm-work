@@ -1,7 +1,7 @@
 server:
   port: 80
   servlet:
-    context-path: /shengsiit
+    context-path: /admin
     session:
       cookie:
         name: SSCRM
@@ -14,11 +14,11 @@ spring:
     port: 6379
     password: crmfoo
   datasource:
-#    driver-class-name: com.mysql.jdbc.Driver
+    #    driver-class-name: com.mysql.jdbc.Driver
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://129.204.70.43:3306/auth?useUnicode=true&characterEncoding=UTF-8&userSSL=false&tinyIntlisBit=true&serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=CONVERT_TO_NULL
-#    username: crm_group23
-#    password: Group23@2019
+    #    username: crm_group23
+    #    password: Group23@2019
     username: owen
     password: Owen@huang2018
     druid:
@@ -53,7 +53,7 @@ shiro:
   unauthorizedUrl: /auth/page/403
   successUrl: /auth/page/index
 logging:
-#  config: classpath:log4j2.xml
+  #  config: classpath:log4j2.xml
   path: ./logs
   level:
     com.ss.server.dao: debug

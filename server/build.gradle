@@ -5,17 +5,16 @@ buildscript {
         springBootVersion = '2.1.2.RELEASE'
     }
     repositories {
-        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public'}
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
     }
     dependencies {
-        classpath ("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     }
 }
 
 //应用插件
 apply plugin: 'java'
 apply plugin: 'idea'
-//apply plugin: 'net.ltgt.apt'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
@@ -31,8 +30,7 @@ compileTestJava.options.encoding = "UTF-8"
 
 //设置maven阿里云镜像
 repositories {
-//    mavenCentral()
-    maven{ url 'http://maven.aliyun.com/nexus/content/groups/public'}
+    maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
 }
 //项目依赖
 dependencies {
@@ -50,13 +48,11 @@ dependencies {
     compile 'com.baomidou:mybatis-plus-boot-starter:2.2.0'
 
     //shiro
-//    compile 'org.apache.shiro:shiro-spring-boot-web-starter:1.4.0'
+    compile 'org.apache.shiro:shiro-spring-boot-web-starter:1.4.0'
     //log4j2
     compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.11.1'
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.11.1'
 
-//    apt "org.projectlombok:lombok:$lombokVersion"
-//    provided "org.projectlombok:lombok:$lombokVersion"
     //其他库
     compile 'com.alibaba:fastjson:1.2.47'
     compile 'org.apache.commons:commons-lang3'
@@ -64,7 +60,6 @@ dependencies {
     //开发依赖：
     annotationProcessor 'org.projectlombok:lombok:1.18.2'
     compileOnly 'org.projectlombok:lombok:1.18.2'
-
     //测试依赖:
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.2'
     testCompileOnly 'org.projectlombok:lombok:1.18.2'
