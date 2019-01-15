@@ -11,7 +11,9 @@ buildscript {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     }
 }
-
+plugins {
+    id 'net.ltgt.apt' version '0.10'
+}
 // 应用插件
 apply plugin: 'java'
 apply plugin: 'idea'
@@ -26,8 +28,10 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 compileJava.options.encoding = "UTF-8"
 compileTestJava.options.encoding = "UTF-8"
+
 // 设置maven阿里云镜像
 repositories {
+//    mavenCentral()
     maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
 }
 // 项目依赖
@@ -55,12 +59,12 @@ dependencies {
     compile 'com.alibaba:fastjson:1.2.47'
     compile 'org.apache.commons:commons-lang3'  // 里面有UUID工具类
     // lombok的正确依赖方式
-    // 开发依赖：
-    annotationProcessor 'org.projectlombok:lombok:1.18.2'
+//    annotationProcessor 'org.projectlombok:lombok:1.18.2'
+//    compileOnly 'org.projectlombok:lombok:1.18.2'
+//    testAnnotationProcessor 'org.projectlombok:lombok:1.18.2'
+//    testCompileOnly 'org.projectlombok:lombok:1.18.2'
     compileOnly 'org.projectlombok:lombok:1.18.2'
-    // 测试依赖:
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.2'
-    testCompileOnly 'org.projectlombok:lombok:1.18.2'
+    apt "org.projectlombok:lombok:1.18.2"
 }
 
 // 设置后依赖不用写版本号
@@ -90,3 +94,15 @@ bootRun {
  * 参考：
  *     https://dzone.com/articles/continuous-auto-restart-with-spring-boot-devtools
  */
+// gradle插件的方式引入lombok
+//repositories {
+//    mavenCentral()
+//}
+//plugins {
+//    id 'net.ltgt.apt' version '0.10'
+//}
+
+//dependencies {
+//    compileOnly 'org.projectlombok:lombok:1.18.2'
+//    apt "org.projectlombok:lombok:1.18.2"
+//}
