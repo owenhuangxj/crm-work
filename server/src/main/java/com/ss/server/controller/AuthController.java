@@ -40,18 +40,19 @@ public class AuthController {
          * 如果成功，与提交的Subject/User关联的帐户数据将与此Subject关联，并且该方法将悄悄返回。在悄悄地返回时，可以将此主题实例视为已验证，
          * getPrincipal()、 getPrincipal()都是非空数据，isAuthenticated() 、isAuthenticated()将返回true
          */
-        try {
+//        try {
             subject.login(new UsernamePasswordToken(username, password));
             SysUser user = (SysUser)subject.getPrincipal();
+            log.info("user : {}",user);
             return JsonModel.succ(oper,"登陆成功")
                             .setReturnData("token", UUID.randomUUID().timestamp())
                             .setReturnData("userId",user.getUserId())
                             .setReturnData("roles",user.getRoleList())
                             .setReturnData("perms",user.getPerms());
-        }catch (LockedAccountException lk){
-            return JsonModel.fail(oper,"账号已经被锁定");
-        }catch (AuthenticationException ex){
-            return JsonModel.fail(oper,"用户名或密码错误");
-        }
+//        }catch (LockedAccountException lk){
+//            return JsonModel.fail(oper,"账号已经被锁定");
+//        }catch (AuthenticationException ex){
+//            return JsonModel.fail(oper,"用户名或密码错误");
+//        }
     }
 }

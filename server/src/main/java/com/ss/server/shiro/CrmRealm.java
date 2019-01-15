@@ -34,7 +34,6 @@ public class CrmRealm extends AuthorizingRealm {
     //默认使用的是SimpleCredentialMatcher,最常用的是HashCredentialMatcher
     @Override
     public void setCredentialsMatcher(CredentialsMatcher credentialsMatcher) {
-        logger.info("config credentialsMatcher : {}",credentialsMatcher.getClass().getName());
         //设置用于匹配密码的CredentialsMatcher
         HashedCredentialsMatcher hashMatcher = new HashedCredentialsMatcher();
         hashMatcher.setHashAlgorithmName(Sha256Hash.ALGORITHM_NAME);
@@ -48,6 +47,7 @@ public class CrmRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         UsernamePasswordToken upToken = (UsernamePasswordToken) token;
+        upToken.setRememberMe(true);
         String username = upToken.getUsername();
         String password = new String(upToken.getPassword());
         if(username == null || password == null){
