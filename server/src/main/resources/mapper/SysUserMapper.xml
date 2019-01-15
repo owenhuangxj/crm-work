@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ss.server.dao.SysUserMapper">
+    <!--autoMapping是自动映射属性和字段的开关，true表示自动映射(前提是符合下划线和驼峰命名规则的约定)-->
+    <resultMap id="userMap" type="SysUser" autoMapping="true">
+        <id column="user_id" property="userId"/>
+        <result property="userCreated"  column="user_created" jdbcType="TIMESTAMP" />
+        <result property="userUpdated"  column="user_updated" jdbcType="TIMESTAMP" />
+        <collection property="roleList" column="role_id" autoMapping="true" ofType="SysRole">
+            <id column="role_id" property="roleId"/>
+        </collection>
+    </resultMap>
+
+    <sql id="userColumns">
+        u.user_id,u.user_name,u.real_name,u.user_password,u.salt,u.is_lock,u.user_created,u.user_updated
+    </sql>
+    <sql id="roleColumns" >
+        r.role_id,r.role_name,r.role_desc,r.role_val,r.role_created,r.role_updated
+    </sql>
+    <!--用户表和角色表是多对多的关系，即一个用户可以拥有多个角色，一个角色对应多个用户，所以需要中间表-->
+    <select id="selectRolesByUserId" resultMap="userMap">
+        select
+        <include refid="userColumns"/>,<include refid="roleColumns"/>
+        from sys_user u
+        left join sys_user_role ur on u.user_id = ur.user_id
+        left join sys_role r on ur.role_id = r.role_id
+        where u.user_id = #{userId}
+    </select>
+
+</mapper>
