@@ -53,7 +53,7 @@ dependencies {
 
     //其他库
     compile 'com.alibaba:fastjson:1.2.47'
-    compile 'org.apache.commons:commons-lang3'  // 里面与UUID工具类
+    compile 'org.apache.commons:commons-lang3'  // 里面有UUID工具类
     // lombok的正确依赖方式
     // 开发依赖：
     annotationProcessor 'org.projectlombok:lombok:1.18.2'

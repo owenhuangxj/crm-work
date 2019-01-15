@@ -53,14 +53,18 @@ public class CrmRealm extends AuthorizingRealm {
         if(username == null || password == null){
             throw new AccountException("用户名或密码不能为空");
         }
-        SysUser user = userService.selectOne(new EntityWrapper<SysUser>().eq("user_name",username).eq("user_password",password));
-        if(null == user) throw new AccountException("用户名或密码错误");
+        SysUser user = userService.selectOne(new EntityWrapper<SysUser>().eq("user_name",username));
 
+        if(null == user) throw new UnknownAccountException("找不到用户 ".concat(username).concat(" 的相关信息"));
+        /**
+         * 查询用户的角色和权限存到SimpleAuthenticationInfo中，
+         * 这样在其它地方，SecurityUtils.getSubject().getPrincipal()就能拿出用户的所有信息，包括角色和权限
+         */
         Set<AuthModel> roles = roleService.getRolesByUserId(user.getUserId());
         Set<AuthModel> perms = permService.getPermsByUserId(user.getUserId());
         user.setPerms(perms);
         user.setRoles(roles);
-        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user,user.getUserName(),user.getUserPassword());
+        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user,user.getUserPassword(),getName());
         if(null != user.getSalt())  info.setCredentialsSalt(ByteSource.Util.bytes(user.getSalt()));
         return info;
     }
