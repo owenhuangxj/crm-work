@@ -16,6 +16,8 @@ import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Set;
@@ -28,29 +30,17 @@ public class CrmRealm extends AuthorizingRealm {
     private SysRoleService roleService;
     @Autowired
     private SysPermService permService;
+    private static Logger logger = LoggerFactory.getLogger(CrmRealm.class);
     //默认使用的是SimpleCredentialMatcher,最常用的是HashCredentialMatcher
     @Override
     public void setCredentialsMatcher(CredentialsMatcher credentialsMatcher) {
+        logger.info("config credentialsMatcher : {}",credentialsMatcher.getClass().getName());
+        //设置用于匹配密码的CredentialsMatcher
         HashedCredentialsMatcher hashMatcher = new HashedCredentialsMatcher();
         hashMatcher.setHashAlgorithmName(Sha256Hash.ALGORITHM_NAME);
         hashMatcher.setStoredCredentialsHexEncoded(false);
         hashMatcher.setHashIterations(1024);
         super.setCredentialsMatcher(hashMatcher);
-    }
-
-    @Override
-    public void setAuthorizationCache(Cache<Object, AuthorizationInfo> authorizationCache) {
-        super.setAuthorizationCache(authorizationCache);
-    }
-
-    @Override
-    public void setAuthorizationCacheName(String authorizationCacheName) {
-        super.setAuthorizationCacheName(authorizationCacheName);
-    }
-
-    @Override
-    public void setAuthorizationCachingEnabled(boolean authenticationCachingEnabled) {
-        super.setAuthorizationCachingEnabled(authenticationCachingEnabled);
     }
 
     //查询用户的角色和权限存到SimpleAuthenticationInfo中，这样在其它地方
