@@ -51,7 +51,7 @@ public class CrmRealm extends AuthorizingRealm {
 
         UsernamePasswordToken upToken = (UsernamePasswordToken) token;
         logger.info("doGetAuthenticationInfo ：{} " ,upToken);
-//        upToken.setRememberMe(true);
+        upToken.setRememberMe(true);
         String username = upToken.getUsername();
         String password = new String(upToken.getPassword());
         if(username == null || password == null){

@@ -13,7 +13,7 @@
           <svg-icon icon-class="password" />
         </span>
         <el-input
-          :type="pwdType"
+          :type="passwordType"
           v-model="loginForm.password"
           name="password"
           auto-complete="on"
@@ -28,8 +28,7 @@
           Sign in
         </el-button>
       </el-form-item>
-      <div class="tips">
-      </div>
+      <div class="tips"></div>
     </el-form>
   </div>
 </template>
@@ -56,15 +55,15 @@ export default {
     }
     return {
       loginForm: {
-        username: 'owen',
-        password: 'huangsir'
+        username: 'admin',
+        password: '123456'
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
         password: [{ required: true, trigger: 'blur', validator: validatePass }]
       },
       loading: false,
-      pwdType: 'password',
+      passwordType: 'password',
       redirect: undefined
     }
   },
@@ -78,10 +77,10 @@ export default {
   },
   methods: {
     showPwd() {
-      if (this.pwdType === 'password') {
-        this.pwdType = ''
+      if (this.passwordType === 'password') {
+        this.passwordType = ''
       } else {
-        this.pwdType = 'password'
+        this.passwordType = 'password'
       }
     },
     handleLogin() {

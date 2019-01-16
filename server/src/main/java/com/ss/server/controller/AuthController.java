@@ -10,6 +10,8 @@ import org.apache.shiro.authc.AccountException;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.UnauthenticatedException;
+import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,5 +61,24 @@ public class AuthController {
         }catch (AuthenticationException ex){
             return JsonModel.fail(oper,"用户名或密码错误");
         }
+    }
+    /**
+     * shiro.loginUrl映射到这里，我在这里直接抛出异常交给GlobalExceptionHandler来统一返回json信息，
+     * 您也可以在这里直接返回json，不过这样子就跟GlobalExceptionHandler中返回的json重复了。
+     * @return
+     */
+    @RequestMapping("/page/401")
+    public JsonModel page401() {
+        throw new UnauthenticatedException();
+    }
+
+    /**
+     * shiro.unauthorizedUrl映射到这里。由于约定了url方式只做鉴权控制，不做权限访问控制，
+     * 也就是说在ShiroConfig中如果没有做roles[js],perms[mvn:install]这样的权限访问控制配置的话，是不会跳转到这里的。
+     * @return
+     */
+    @RequestMapping("/page/403")
+    public JsonModel page403() {
+        throw new UnauthorizedException();
     }
 }
