@@ -38,21 +38,26 @@ public class AuthController {
         /**
          * 执行登录操作。如果不成功，则抛出AuthenticationException，而AuthenticationException的子类会指明具体失败的原因。
          * 如果成功，与提交的Subject/User关联的帐户数据将与此Subject关联，并且该方法将悄悄返回。在悄悄地返回时，可以将此主题实例视为已验证，
-         * getPrincipal()、 getPrincipal()都是非空数据，isAuthenticated() 、isAuthenticated()将返回true
+         * getPrincipal()返回Principal数据，isAuthenticated() 、isAuthenticated()将返回true
          */
-//        try {
+        try {
+            /**
+             * the token encapsulating the subject's principals(主体) and credentials（凭证） to be passed to the Authentication subsystem for verification.
+             * shiro登录：程序员生成UsernamePasswordToken -token,调用login,login方法将token传递给Realm的doGetAuthenticationInfo方法，Shiro调用Realm的doGetAuthenticationInfo方法4
+             * 通过doGetAuthenticationInfo方法返回的AuthenticationInfo来进行用户的密码验证
+              */
             subject.login(new UsernamePasswordToken(username, password));
             SysUser user = (SysUser)subject.getPrincipal();
-            log.info("user : {}",user);
+//            log.info("user : {}",user);
             return JsonModel.succ(oper,"登陆成功")
-                            .setReturnData("token", UUID.randomUUID().timestamp())
+                            .setReturnData("token", UUID.randomUUID().toString())
                             .setReturnData("userId",user.getUserId())
-                            .setReturnData("roles",user.getRoleList())
+                            .setReturnData("roles",user.getRoles())
                             .setReturnData("perms",user.getPerms());
-//        }catch (LockedAccountException lk){
-//            return JsonModel.fail(oper,"账号已经被锁定");
-//        }catch (AuthenticationException ex){
-//            return JsonModel.fail(oper,"用户名或密码错误");
-//        }
+        }catch (LockedAccountException lk){
+            return JsonModel.fail(oper,"账号已经被锁定");
+        }catch (AuthenticationException ex){
+            return JsonModel.fail(oper,"用户名或密码错误");
+        }
     }
 }

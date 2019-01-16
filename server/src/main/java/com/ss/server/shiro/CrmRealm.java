@@ -31,7 +31,9 @@ public class CrmRealm extends AuthorizingRealm {
     @Autowired
     private SysPermService permService;
     private static Logger logger = LoggerFactory.getLogger(CrmRealm.class);
-    //默认使用的是SimpleCredentialMatcher,最常用的是HashCredentialMatcher
+    /**
+     * 默认使用的是SimpleCredentialMatcher,最常用的是HashCredentialMatcher，Shiro在获取到
+     */
     @Override
     public void setCredentialsMatcher(CredentialsMatcher credentialsMatcher) {
         //设置用于匹配密码的CredentialsMatcher
@@ -46,16 +48,33 @@ public class CrmRealm extends AuthorizingRealm {
     //SecurityUtils.getSubject().getPrincipal()就能拿出用户的所有信息，包括角色和权限
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+
         UsernamePasswordToken upToken = (UsernamePasswordToken) token;
-        upToken.setRememberMe(true);
+        logger.info("doGetAuthenticationInfo ：{} " ,upToken);
+//        upToken.setRememberMe(true);
         String username = upToken.getUsername();
         String password = new String(upToken.getPassword());
         if(username == null || password == null){
             throw new AccountException("用户名或密码不能为空");
         }
+        /**
+         *  根据用户名查找用户信息：password和salt至关重要，Shiro是通过在这里从数据库中获取的password和salt
+         *  经过指定算法(setCredentialsMatcher方法里面指定)与用户输入的密码进行比较的
+          */
         SysUser user = userService.selectOne(new EntityWrapper<SysUser>().eq("user_name",username));
 
         if(null == user) throw new UnknownAccountException("找不到用户 ".concat(username).concat(" 的相关信息"));
+        /**
+         * 这个是Shiro验证所依赖的Authentication对象
+         * SimpleAuthenticationInfo(Object principal, Object credentials, String realmName)构造方法参数说明
+         *  principal   the 'primary' principal associated with the specified realm.
+         *  credentials the credentials that verify the given principal.
+         *  realmName   the realm from where the principal and credentials were acquired.
+         */
+        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user,user.getUserPassword(),getName());
+        // 使用了密盐加密，所以需要通过setCredentialsSalt方法传递密盐给Shrio
+        if(null != user.getSalt())  info.setCredentialsSalt(ByteSource.Util.bytes(user.getSalt()));
+
         /**
          * 查询用户的角色和权限存到SimpleAuthenticationInfo中，
          * 这样在其它地方，SecurityUtils.getSubject().getPrincipal()就能拿出用户的所有信息，包括角色和权限
@@ -64,8 +83,6 @@ public class CrmRealm extends AuthorizingRealm {
         Set<AuthModel> perms = permService.getPermsByUserId(user.getUserId());
         user.setPerms(perms);
         user.setRoles(roles);
-        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user,user.getUserPassword(),getName());
-        if(null != user.getSalt())  info.setCredentialsSalt(ByteSource.Util.bytes(user.getSalt()));
         return info;
     }
 
