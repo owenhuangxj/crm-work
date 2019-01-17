@@ -19,7 +19,7 @@
               border fit highlight-current-row>
       <el-table-column prop="userId" label="用户id"></el-table-column>
       <el-table-column prop="userName" label="登录名"></el-table-column>
-      <el-table-column prop="realName" label="昵称"></el-table-column>
+      <el-table-column prop="realName" label="真实姓名"></el-table-column>
       <el-table-column label="角色">
         <template slot-scope="scope">
           <el-tag style="margin: 2px;" v-for="role in scope.row.roleList" :key="role.rid">{{role.rname}}</el-tag>
