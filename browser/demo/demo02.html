@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>vue component</title>
+</head>
+<body>
+<!-- 开发环境版本，包含了有帮助的命令行警告 -->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+  Vue.component('todo-item',{
+    props:['todo'] /*props为todo-item的自定义特性,它是一个数组，接受一个名为todo的参数*/,
+    template:'<li>{{todo.text}}</li>'
+  });
+</script>
+<div id="app">
+  <ol>
+    <!-- 创建一个 todo-item 组件的实例 -->
+    <todo-item
+      v-for="item in groceryList"
+      v-bind:todo="item"
+      v-bind:key="item.id"
+    ></todo-item>
+  </ol>
+</div>
+<script>
+  var app = new Vue({
+    el:'#app',
+    data:{
+      groceryList:[
+        {id:0,text:'腰果'},
+        {id:1,text:'榛子'},
+        {id:2,text:'蓝莓'}
+      ]
+    }
+  });
+</script>
+</div>
+</body>
+</html>

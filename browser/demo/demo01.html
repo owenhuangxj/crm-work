@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>hello world</title>
+</head>
+<body>
+<!-- 开发环境版本，包含了有帮助的命令行警告 -->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<!--HelloWorld实例-->
+<div id="app">{{message}}</div>
+<!--bind指令实例-->
+<div id="app2">
+  <!-- v-bind 指令将span元素节点的 title 特性和 Vue 实例的 message 属性保持一致-->
+  <span v-bind:title="message">悬停几秒钟就可以看到内容</span>
+</div>
+<!--if实例-->
+<div id="app3">
+  <p v-if="seen">now,you can see me!</p>
+</div>
+<!--for实例-->
+<div id="app4">
+  <ol>
+    <li v-for="todo in todos">
+      {{todo.text}}
+    </li>
+  </ol>
+</div>
+<!--使用v-on和用户进行交互-->
+<div id="app5">
+  <span>{{message}}</span>
+  <button v-on:click="reverseMessage">逆转消息</button>
+</div>
+<div id="app6">
+  <!--v-model 指令能轻松实现表单输入和应用状态之间的双向绑定。-->
+  <!--<span>{{message}}</span>-->
+  <p>{{message}}</p>
+  <input v-model="message">
+</div>
+<script>
+  var app = new Vue({
+    el:'#app',
+    data:{
+      message:'Hello World'
+    }
+  });
+  var app2 = new Vue({
+    el:'#app2',
+    data:{
+      message:'页面加载于：'+ new Date().toLocaleString()
+    }
+  });
+  var app3 = new Vue({
+    el:'#app3',
+    data:{
+      seen:false
+    }
+  });
+  var app4 = new Vue({
+    el:'#app4',
+    data:{
+      todos:[
+        {text:'Html'},
+        {text:'CSS'},
+        {text:'JavaScript'}
+      ]
+    }
+  });
+  var app5 = new Vue({
+    el:'#app5',
+    data:{
+      message:'Hello,Vue World !',
+    },
+    methods:{
+      /*reverseMessage更新了应用的状态，但没有触碰 DOM——所有的 DOM 操作都由 Vue 来处理，程序员编写的代码只需要关注逻辑层面即可。*/
+      reverseMessage:function () {
+        this.message = this.message.split('').reverse().join('');
+      }
+    }
+  });
+  var app6 = new Vue({
+    el:'#app6',
+    data:{
+      message:'Hello ,Vue!'
+    }
+  });
+</script>
+</body>
+</html>
